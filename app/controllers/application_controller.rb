@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  before_action :ensure_logged_in
 
   private
 
@@ -7,18 +8,14 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  helper_method :current_user
-end
-
-def ensure_logged_in
-   unless current_user
-     flash[:alert] = "Please log in"
-     redirect_to new_session_path
+  def ensure_logged_in
+     unless current_user
+       flash[:alert] = "Please log in"
+       redirect_to new_session_path
+     end
    end
- end
-end
 
- before_action :ensure_logged_in, only: [:create, :destroy]
+  helper_method :current_user
 end
 
 # Prevent CSRF attacks by raising an exception.

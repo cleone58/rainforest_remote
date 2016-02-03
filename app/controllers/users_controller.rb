@@ -1,10 +1,14 @@
 class UsersController < ApplicationController
+  skip_before_action :ensure_logged_in
+
   def new
     @user = User.new
   end
 
   def create
+    
     @user = User.new(user_params)
+
     if @user.save
       redirect_to products_url, notice: "Signed up!"
     else
